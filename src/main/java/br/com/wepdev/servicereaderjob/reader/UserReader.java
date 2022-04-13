@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,11 +19,25 @@ public class UserReader implements ItemReader<User> {
 
   private RestTemplate restTemplate = new RestTemplate();
   private int page = 1;
+  private List<User> users = new ArrayList<>(); // Lista que guarda os usuarios
+  private int userIndex = 0; // Indice do usuario que avisa qual usuario esta sendo lido
 
 
+  /**
+   * Esse metodo read() devolve apenas um Usuario por vez, esse metodo deve para de executar quando nao houver mais usuarios na lista
+   */
   @Override
   public User read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-    return null;
+
+    User user;
+    // Logica de leitura da Lista de usuarios
+    if(userIndex < users.size())
+       user = users.get(userIndex); // Se o indice for valido, e retornado o indice atual
+    else // Se ja acabou os registros de usuarios, o user recebe null, pois nao existem mais usuarios na lista. Assim acaba a leitura
+       user = null;
+
+       userIndex++;
+       return user;
   }
 
 
